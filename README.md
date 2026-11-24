@@ -56,7 +56,7 @@
 | галочка «под ноги» | спавн на землю вместо инвентаря |
 
 Настройки хранятся в `UserData/MelonPreferences.cfg`, секция `[WinterWishlist]`:
-`Hotkey`, `ShowIds`, `WindowWidth`, `WindowHeight`.
+`Hotkey`, `WindowWidth`, `WindowHeight`.
 
 ## Сборка из исходников
 

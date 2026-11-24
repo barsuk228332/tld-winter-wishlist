@@ -13,7 +13,7 @@ namespace WinterWishlist
 
         internal static MelonPreferences_Category Prefs;
         internal static MelonPreferences_Entry<string> PrefHotkey;
-        internal static MelonPreferences_Entry<bool> PrefShowIds;
+        
         internal static MelonPreferences_Entry<int> PrefWidth;
         internal static MelonPreferences_Entry<int> PrefHeight;
 
@@ -23,13 +23,13 @@ namespace WinterWishlist
 
             Prefs = MelonPreferences.CreateCategory("WinterWishlist", "Winter Wishlist");
             PrefHotkey = Prefs.CreateEntry("Hotkey", "F7", "Клавиша открытия окна");
-            PrefShowIds = Prefs.CreateEntry("ShowIds", false, "Показывать внутренние ID предметов");
+
             PrefWidth = Prefs.CreateEntry("WindowWidth", 760, "Ширина окна");
             PrefHeight = Prefs.CreateEntry("WindowHeight", 560, "Высота окна");
             Prefs.SaveToFile();
 
             SpawnerWindow.LoadPreferences();
-            Log.Msg("Item Spawner 0.1.0 загружен. Клавиша: " + PrefHotkey.Value);
+            Log.Msg("Winter Wishlist 0.1.0 загружен. Клавиша: " + PrefHotkey.Value);
         }
 
         public override void OnDeinitializeMelon()
@@ -47,7 +47,6 @@ namespace WinterWishlist
         {
             try
             {
-                WinterWishlistMod.Log.Msg("Сцена инициализирована: " + sceneName);
                 if (SpawnerWindow.IsOpen)
                     WinterWishlistMod.Log.Msg("Окно открыто во время смены сцены — каталог остаётся прежним");
             }

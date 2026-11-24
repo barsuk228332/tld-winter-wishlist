@@ -22,7 +22,6 @@ namespace WinterWishlist
 
         private static GUIStyle _nameStyle;
         private static GUIStyle _idStyle;
-
         private static int _count = 1;
         private static float _condition = 1f;
         private static bool _toFeet;
@@ -151,7 +150,7 @@ namespace WinterWishlist
         private static void DrawHeader()
         {
             GUILayout.BeginHorizontal();
-            GUILayout.Label("<b>Item Spawner</b>");
+            GUILayout.Label("<b>Winter Wishlist</b>");
             GUILayout.Label(ItemCatalog.LastReport);
             GUILayout.Label(UiLang.Current);
             GUILayout.FlexibleSpace();
@@ -223,15 +222,11 @@ namespace WinterWishlist
                 GUI.DrawTexture(iconRect, icon, ScaleMode.ScaleToFit);
 
             float textX = row.x + IconSize + 8f;
+            float innerWidth = row.width - (textX - row.x) - 10f;
             string name = (entry.FromMod ? "★ " : string.Empty) + entry.Display;
-            GUI.Label(new Rect(textX, row.y + 4f, row.width - (textX - row.x) - 8f, 20f), name, _nameStyle);
 
-            if (WinterWishlistMod.PrefShowIds.Value)
-            {
-                GUI.Label(new Rect(textX, row.y + 24f, row.width - (textX - row.x) - 8f, 16f),
-                    entry.Id, _idStyle);
-            }
-
+            GUI.Label(new Rect(textX, row.y + 5f, innerWidth, 18f), name, _nameStyle);
+            GUI.Label(new Rect(textX, row.y + 23f, innerWidth, 15f), entry.Id, _idStyle);
             if (clicked)
                 Spawn(entry);
         }
@@ -249,12 +244,11 @@ namespace WinterWishlist
             };
             _idStyle = new GUIStyle(GUI.skin.label)
             {
-                alignment = TextAnchor.MiddleLeft,
+                alignment = TextAnchor.MiddleRight,
                 fontSize = 11,
                 richText = false,
             };
-            _idStyle.normal.textColor = new Color(0.62f, 0.62f, 0.62f);
-        }
+            _idStyle.normal.textColor = new Color(0.62f, 0.62f, 0.62f);        }
 
         private static Texture2D GetIcon(string id)
         {
