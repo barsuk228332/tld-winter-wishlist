@@ -34,6 +34,7 @@ namespace WinterWishlist
 
         public override void OnDeinitializeMelon()
         {
+            GameInput.SetBlocked(false);
             Prefs?.SaveToFile();
         }
 

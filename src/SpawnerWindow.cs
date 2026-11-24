@@ -46,17 +46,7 @@ namespace WinterWishlist
         {
             if (Input.GetKeyDown(_hotkey))
             {
-                _open = !_open;
-                if (_open)
-                {
-                    ItemCatalog.EnsureBuilt();
-                    FilterItems();
-                    _scroll = Vector2.zero;
-                }
-                else
-                {
-                    SavePreferences();
-                }
+                SetOpen(!_open);
                 return;
             }
 
@@ -65,8 +55,7 @@ namespace WinterWishlist
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                _open = false;
-                SavePreferences();
+                SetOpen(false);
                 return;
             }
 
@@ -100,6 +89,26 @@ namespace WinterWishlist
             {
                 FilterItems();
                 _scroll = Vector2.zero;
+            }
+        }
+
+        internal static void SetOpen(bool open)
+        {
+            if (open == _open)
+                return;
+
+            _open = open;
+            GameInput.SetBlocked(open);
+
+            if (open)
+            {
+                ItemCatalog.EnsureBuilt();
+                FilterItems();
+                _scroll = Vector2.zero;
+            }
+            else
+            {
+                SavePreferences();
             }
         }
 
@@ -160,10 +169,7 @@ namespace WinterWishlist
                 FilterItems();
             }
             if (GUILayout.Button("X", GUILayout.Width(24f)))
-            {
-                _open = false;
-                SavePreferences();
-            }
+                SetOpen(false);
             GUILayout.EndHorizontal();
         }
 

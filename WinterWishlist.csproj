@@ -27,6 +27,10 @@
       <HintPath>$(MlDir)/net6/0Harmony.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="Il2CppRewired_Core">
+      <HintPath>$(Il2CppDir)/Il2CppRewired_Core.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
     <Reference Include="Il2Cppmscorlib">
       <HintPath>$(Il2CppDir)/Il2Cppmscorlib.dll</HintPath>
       <Private>false</Private>
