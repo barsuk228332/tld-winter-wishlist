@@ -25,6 +25,8 @@ namespace WinterWishlist
         private static readonly Queue<string> IconOrder = new Queue<string>();
         private static GUIStyle _nameStyle;
         private static GUIStyle _idStyle;
+        private static GUIStyle _tabStyle;
+        private static GUIStyle _tabActiveStyle;
         private static int _count = 1;
         private static float _condition = 1f;
         private static bool _toFeet;
@@ -169,7 +171,7 @@ namespace WinterWishlist
                 GUILayout.BeginArea(new Rect(_rect.x + 8f, _rect.y + 8f, _rect.width - 16f, _rect.height - 16f));
 
                 DrawHeader();
-                _tab = GUILayout.Toolbar(_tab, TabNames());
+                DrawTabs();
 
                 switch (_tab)
                 {
@@ -258,6 +260,40 @@ namespace WinterWishlist
             if (GUILayout.Button("X", GUILayout.Width(24f)))
                 SetOpen(false);
             GUILayout.EndHorizontal();
+        }
+
+        private static void DrawTabs()
+        {
+            EnsureTabStyles();
+
+            var names = TabNames();
+            GUILayout.BeginHorizontal();
+            for (int i = 0; i < names.Length; i++)
+            {
+                if (GUILayout.Button(names[i], i == _tab ? _tabActiveStyle : _tabStyle, GUILayout.Width(122f)))
+                    _tab = i;
+            }
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+        }
+
+        private static void EnsureTabStyles()
+        {
+            if (_tabStyle != null)
+                return;
+
+            _tabStyle = new GUIStyle(GUI.skin.button)
+            {
+                fontSize = 13,
+                richText = true,
+            };
+            _tabActiveStyle = new GUIStyle(_tabStyle)
+            {
+                fontStyle = FontStyle.Bold,
+            };
+            _tabActiveStyle.normal.textColor = new Color(1f, 0.84f, 0.36f);
+            _tabActiveStyle.hover.textColor = new Color(1f, 0.9f, 0.55f);
+            _tabActiveStyle.active.textColor = new Color(1f, 0.84f, 0.36f);
         }
 
         /********* Вкладка «Предметы» *********/

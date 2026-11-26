@@ -4,7 +4,7 @@
 модовые), прокачка навыков, бессмертие, бесконечная грузоподъёмность, раскрытие
 карты, управление временем и погодой, лечение всех болезней.
 
-![version](https://img.shields.io/badge/version-0.2.0-blue)
+![version](https://img.shields.io/badge/version-0.2.1-blue)
 ![game](https://img.shields.io/badge/The%20Long%20Dark-2.55-green)
 ![license](https://img.shields.io/badge/license-MIT-lightgrey)
 
