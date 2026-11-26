@@ -453,17 +453,28 @@ namespace WinterWishlist
             GUILayout.Label("<b>" + UiLang.T("Уровни навыков", "Skill levels") + "</b>");
             GUILayout.Space(4f);
 
-            foreach (var type in SkillService.All)
+            var rows = SkillService.Rows();
+            if (rows.Count == 0)
+            {
+                GUILayout.Label(UiLang.T("Навыки недоступны (загрузи игру)", "Skills unavailable (load a game)"));
+            }
+
+            foreach (var row in rows)
             {
                 GUILayout.BeginHorizontal();
-                GUILayout.Label(SkillService.Name(type), GUILayout.Width(240f));
-                GUILayout.Label(SkillService.TierName(type), GUILayout.Width(160f));
+                GUILayout.Label(row.Name, GUILayout.Width(240f));
+                GUILayout.Label(row.TierName, GUILayout.Width(160f));
                 if (GUILayout.Button("MAX", GUILayout.Width(70f)))
                 {
-                    if (SkillService.MaxOne(type))
-                        SetStatus(UiLang.T("Навык прокачан: ", "Skill maxed: ") + SkillService.Name(type));
+                    if (SkillService.Max(row.Skill))
+                    {
+                        SetStatus(UiLang.T("Навык прокачан: ", "Skill maxed: ") + row.Name);
+                        SkillService.Refresh();
+                    }
                     else
-                        SetStatus(UiLang.T("Навык недоступен (загрузи игру)", "Skill unavailable (load a game)"));
+                    {
+                        SetStatus(UiLang.T("Не удалось прокачать навык", "Failed to max skill"));
+                    }
                 }
                 GUILayout.EndHorizontal();
             }

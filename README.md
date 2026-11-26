@@ -4,7 +4,7 @@
 модовые), прокачка навыков, бессмертие, бесконечная грузоподъёмность, раскрытие
 карты, управление временем и погодой, лечение всех болезней.
 
-![version](https://img.shields.io/badge/version-0.2.1-blue)
+![version](https://img.shields.io/badge/version-0.2.2-blue)
 ![game](https://img.shields.io/badge/The%20Long%20Dark-2.55-green)
 ![license](https://img.shields.io/badge/license-MIT-lightgrey)
 
@@ -29,8 +29,9 @@
 
 ### Скиллы
 
-- Все 10 навыков игры (Firestarting, Carcass Harvesting, Cooking, Ice Fishing,
-  Rifle, Archery, Clothing Repair, Tool Repair, Revolver, Gunsmithing).
+- Все навыки, которые реально есть в игре (список берётся у самого
+  `SkillsManager`, поэтому версия игры с другим набором навыков не ломает окно:
+  в 2.55, например, `ToolRepair` больше не существует и просто не показывается).
 - Текущий уровень и кнопка **MAX** для каждого навыка.
 - Кнопка **прокачать всё** — ставит Master (5 уровень) каждому навыку.
 

@@ -6,7 +6,7 @@
     <AssemblyName>WinterWishlist</AssemblyName>
     <RootNamespace>WinterWishlist</RootNamespace>
     <Nullable>disable</Nullable>
-    <Version>0.2.1</Version>
+    <Version>0.2.2</Version>
     <PlatformTarget>x64</PlatformTarget>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <GameDir Condition="'$(GameDir)' == ''">$(HOME)/Games/TheLongDark</GameDir>

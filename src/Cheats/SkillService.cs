@@ -1,97 +1,92 @@
 using System;
+using System.Collections.Generic;
 using Il2Cpp;
+using UnityEngine;
 
 namespace WinterWishlist.Cheats
 {
+    /// <summary>Строка списка навыков для окна.</summary>
+    internal sealed class SkillRow
+    {
+        internal Skill Skill;
+        internal string Name;
+        internal int Tier;
+        internal string TierName;
+    }
+
     internal static class SkillService
     {
-        internal static readonly SkillType[] All =
-        {
-            SkillType.Firestarting,
-            SkillType.CarcassHarvesting,
-            SkillType.Cooking,
-            SkillType.IceFishing,
-            SkillType.Rifle,
-            SkillType.Archery,
-            SkillType.ClothingRepair,
-            SkillType.ToolRepair,
-            SkillType.Revolver,
-            SkillType.Gunsmithing,
-        };
+        private static List<SkillRow> _rows = new List<SkillRow>();
+        private static float _nextRefresh;
 
-        internal static SkillsManager Manager
+        /// <summary>
+        /// Список реально существующих в этой версии игры навыков.
+        /// Берём его у самого SkillsManager, а не из enum: в 2.55, например,
+        /// ToolRepair больше не создаётся, и захардкоженный список ломался.
+        /// </summary>
+        internal static List<SkillRow> Rows()
         {
-            get
-            {
-                try
-                {
-                    return GameManager.GetSkillsManager();
-                }
-                catch
-                {
-                    return null;
-                }
-            }
+            if (Time.realtimeSinceStartup >= _nextRefresh)
+                Refresh();
+            return _rows;
         }
 
-        internal static Skill Get(SkillType type)
+        internal static void Refresh()
         {
+            _nextRefresh = Time.realtimeSinceStartup + 1f;
+
+            var rows = new List<SkillRow>();
             try
             {
-                return Manager?.GetSkill(type);
+                var manager = GameManager.GetSkillsManager();
+                if (manager != null)
+                {
+                    int count = manager.GetNumSkills();
+                    for (int i = 0; i < count; i++)
+                    {
+                        var skill = manager.GetSkillFromIndex(i);
+                        if (skill == null)
+                            continue;
+
+                        string name = null;
+                        string tierName = "—";
+                        int tier = -1;
+                        try
+                        {
+                            name = skill.m_DisplayName;
+                            tier = skill.GetCurrentTierNumber();
+                            tierName = skill.GetCurrentTierName();
+                        }
+                        catch (Exception e)
+                        {
+                            WinterWishlistMod.Log.Warning("Чтение навыка #" + i + ": " + e.Message);
+                        }
+
+                        if (string.IsNullOrEmpty(name))
+                            name = skill.m_SkillType.ToString();
+
+                        rows.Add(new SkillRow
+                        {
+                            Skill = skill,
+                            Name = name,
+                            Tier = tier,
+                            TierName = tierName,
+                        });
+                    }
+                }
             }
             catch (Exception e)
             {
-                WinterWishlistMod.Log.Warning("Скилл " + type + ": " + e.Message);
-                return null;
+                WinterWishlistMod.Log.Warning("Список навыков: " + e.Message);
             }
+
+            _rows = rows;
         }
 
-        internal static string Name(SkillType type)
+        internal static bool Max(Skill skill)
         {
             try
             {
-                var skill = Get(type);
-                if (skill != null && !string.IsNullOrEmpty(skill.m_DisplayName))
-                    return skill.m_DisplayName;
-            }
-            catch
-            {
-                // ниже вернём техническое имя
-            }
-            return type.ToString();
-        }
-
-        internal static int Level(SkillType type)
-        {
-            try
-            {
-                return Get(type)?.GetCurrentTierNumber() ?? -1;
-            }
-            catch
-            {
-                return -1;
-            }
-        }
-
-        internal static string TierName(SkillType type)
-        {
-            try
-            {
-                var skill = Get(type);
-                return skill?.GetCurrentTierName() ?? "—";
-            }
-            catch
-            {
-                return "—";
-            }
-        }
-
-        internal static bool MaxOne(SkillType type)
-        {
-            try
-            {
-                var skill = Get(type);
                 if (skill == null)
                     return false;
 
@@ -101,7 +96,7 @@ namespace WinterWishlist.Cheats
             }
             catch (Exception e)
             {
-                WinterWishlistMod.Log.Warning("Максимум скилла " + type + ": " + e.Message);
+                WinterWishlistMod.Log.Warning("Максимум навыка: " + e.Message);
                 return false;
             }
         }
@@ -109,11 +104,13 @@ namespace WinterWishlist.Cheats
         internal static int MaxAll()
         {
             int done = 0;
-            foreach (var type in All)
+            foreach (var row in Rows())
             {
-                if (MaxOne(type))
+                if (Max(row.Skill))
                     done++;
             }
+
+            Refresh();
             return done;
         }
     }
