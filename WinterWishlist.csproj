@@ -6,7 +6,7 @@
     <AssemblyName>WinterWishlist</AssemblyName>
     <RootNamespace>WinterWishlist</RootNamespace>
     <Nullable>disable</Nullable>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <PlatformTarget>x64</PlatformTarget>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <GameDir Condition="'$(GameDir)' == ''">$(HOME)/Games/TheLongDark</GameDir>
@@ -57,6 +57,10 @@
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
       <HintPath>$(Il2CppDir)/UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Il2CppTLD.IntBackedUnit">
+      <HintPath>$(Il2CppDir)/Il2CppTLD.IntBackedUnit.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.AssetBundleModule">

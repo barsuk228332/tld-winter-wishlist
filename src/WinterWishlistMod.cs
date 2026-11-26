@@ -1,8 +1,9 @@
 using MelonLoader;
 using Il2Cpp;
 using UnityEngine;
+using WinterWishlist.Cheats;
 
-[assembly: MelonInfo(typeof(WinterWishlist.WinterWishlistMod), "Winter Wishlist", "0.1.0", "barsuk")]
+[assembly: MelonInfo(typeof(WinterWishlist.WinterWishlistMod), "Winter Wishlist", "0.2.0", "barsuk")]
 [assembly: MelonGame("Hinterland", "TheLongDark")]
 
 namespace WinterWishlist
@@ -13,7 +14,7 @@ namespace WinterWishlist
 
         internal static MelonPreferences_Category Prefs;
         internal static MelonPreferences_Entry<string> PrefHotkey;
-        
+
         internal static MelonPreferences_Entry<int> PrefWidth;
         internal static MelonPreferences_Entry<int> PrefHeight;
 
@@ -24,32 +25,42 @@ namespace WinterWishlist
             Prefs = MelonPreferences.CreateCategory("WinterWishlist", "Winter Wishlist");
             PrefHotkey = Prefs.CreateEntry("Hotkey", "F7", "Клавиша открытия окна");
 
-            PrefWidth = Prefs.CreateEntry("WindowWidth", 760, "Ширина окна");
-            PrefHeight = Prefs.CreateEntry("WindowHeight", 560, "Высота окна");
+            PrefWidth = Prefs.CreateEntry("WindowWidth", 940, "Ширина окна");
+            PrefHeight = Prefs.CreateEntry("WindowHeight", 680, "Высота окна");
             Prefs.SaveToFile();
 
-            SpawnerWindow.LoadPreferences();
-            Log.Msg("Winter Wishlist 0.1.0 загружен. Клавиша: " + PrefHotkey.Value);
+            MainWindow.LoadPreferences();
+            Log.Msg("Winter Wishlist 0.2.0 загружен. Клавиша: " + PrefHotkey.Value);
         }
 
         public override void OnDeinitializeMelon()
         {
+            try
+            {
+                CheatState.ResetAll();
+            }
+            catch (System.Exception e)
+            {
+                Log.Warning("Сброс читов: " + e.Message);
+            }
+
             GameInput.SetBlocked(false);
             Prefs?.SaveToFile();
         }
 
         public override void OnUpdate()
         {
-            SpawnerWindow.HandleInput();
-            SpawnerWindow.HandleCursor();
+            MainWindow.HandleInput();
+            MainWindow.HandleCursor();
+            CheatState.Tick();
         }
 
         public override void OnSceneWasInitialized(int buildIndex, string sceneName)
         {
             try
             {
-                if (SpawnerWindow.IsOpen)
-                    WinterWishlistMod.Log.Msg("Окно открыто во время смены сцены — каталог остаётся прежним");
+                if (MainWindow.IsOpen)
+                    Log.Msg("Окно открыто во время смены сцены — каталог остаётся прежним");
             }
             catch (System.Exception e)
             {
@@ -59,7 +70,7 @@ namespace WinterWishlist
 
         public override void OnGUI()
         {
-            SpawnerWindow.Draw();
+            MainWindow.Draw();
         }
     }
 }

@@ -14,15 +14,20 @@ namespace WinterWishlist
             }
         }
 
-        internal static string Current => Lang == "ru" ? "RU" : "EN";
+        internal static bool Ru => Lang == "ru";
 
-        internal static string Search => Lang == "ru" ? "Поиск:" : "Search:";
-        internal static string SearchHint => Lang == "ru" ? "печатай название или ID…" : "type name or ID…";
-        internal static string Count => Lang == "ru" ? "Кол-во:" : "Count:";
-        internal static string Condition => Lang == "ru" ? "Состояние:" : "Condition:";
-        internal static string ToFeet => Lang == "ru" ? "под ноги (не в инвентарь)" : "at feet (not inventory)";
-        internal static string Added => Lang == "ru" ? "Добавлено" : "Added";
-        internal static string Dropped => Lang == "ru" ? "Выброшено" : "Dropped";
-        internal static string Failed => Lang == "ru" ? "Ошибка" : "Failed";
+        internal static string T(string ru, string en) => Ru ? ru : en;
+
+        internal static string Current => Ru ? "RU" : "EN";
+
+        internal static string Search => T("Поиск:", "Search:");
+        internal static string SearchHint => T("печатай название или ID…", "type name or ID…");
+        internal static string Count => T("Кол-во:", "Count:");
+        internal static string Condition => T("Состояние:", "Condition:");
+        internal static string ToFeet => T("под ноги (не в инвентарь)", "at feet (not inventory)");
+        internal static string Added => T("Добавлено", "Added");
+        internal static string Dropped => T("Выброшено", "Dropped");
+        internal static string Failed => T("Ошибка", "Failed");
+        internal static string Done => T("Готово", "Done");
     }
 }
