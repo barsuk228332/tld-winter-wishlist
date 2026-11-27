@@ -3,7 +3,7 @@ using Il2Cpp;
 using UnityEngine;
 using WinterWishlist.Cheats;
 
-[assembly: MelonInfo(typeof(WinterWishlist.WinterWishlistMod), "Winter Wishlist", "0.2.2", "barsuk")]
+[assembly: MelonInfo(typeof(WinterWishlist.WinterWishlistMod), "Winter Wishlist", "0.2.3", "barsuk")]
 [assembly: MelonGame("Hinterland", "TheLongDark")]
 
 namespace WinterWishlist
@@ -30,7 +30,7 @@ namespace WinterWishlist
             Prefs.SaveToFile();
 
             MainWindow.LoadPreferences();
-            Log.Msg("Winter Wishlist 0.2.2 загружен. Клавиша: " + PrefHotkey.Value);
+            Log.Msg("Winter Wishlist 0.2.3 загружен. Клавиша: " + PrefHotkey.Value);
         }
 
         public override void OnDeinitializeMelon()

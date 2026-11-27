@@ -38,6 +38,19 @@ namespace WinterWishlist.Cheats
             new KitItem("Water", 4),
         };
 
+        private static readonly KitItem[] BestClothing =
+        {
+            new KitItem("GEAR_Balaclava", 1),
+            new KitItem("GEAR_Toque", 1),
+            new KitItem("GEAR_PremiumWinterCoat", 2), // Expedition Parka («Походная парка»)
+            new KitItem("GEAR_FishermanSweater", 2),
+            new KitItem("GEAR_RabbitSkinMittens", 1),
+            new KitItem("GEAR_CombatPants", 2),
+            new KitItem("GEAR_ClimbingSocks", 2),
+            new KitItem("GEAR_SkiBoots", 1),
+            new KitItem("GEAR_LongUnderwearWool", 2),
+        };
+
         /// <summary>Ремонтирует все ремонтируемые предметы в инвентаре.</summary>
         internal static string RepairAll()
         {
@@ -111,6 +124,63 @@ namespace WinterWishlist.Cheats
                 WinterWishlistMod.Log.Warning("GiveSurvivalKit: " + e);
                 return UiLang.T("Ошибка: ", "Error: ") + e.Message;
             }
+        }
+
+        /// <summary>Выдаёт полный комплект лучшей одежды (состояние 100%).</summary>
+        internal static string GiveBestClothing()
+        {
+            try
+            {
+                ItemCatalog.EnsureBuilt();
+
+                int total = 0;
+                var missing = new List<string>();
+                foreach (var kitItem in BestClothing)
+                {
+                    var entry = FindExact(kitItem.Token);
+                    if (entry == null)
+                    {
+                        missing.Add(kitItem.Token);
+                        continue;
+                    }
+
+                    // Одежда не стакается: AddItemCONSOLE игнорирует count > 1,
+                    // поэтому создаём каждый предмет отдельно.
+                    for (int i = 0; i < kitItem.Count; i++)
+                    {
+                        var spawned = SpawnService.Spawn(entry, 1, 1f, false, out string error);
+                        if (spawned != null)
+                        {
+                            total++;
+                            continue;
+                        }
+
+                        missing.Add(entry.Display + ": " + error);
+                        break;
+                    }
+                }
+
+                string text = UiLang.T("Выдано одежды: ", "Clothing items given: ") + total;
+                if (missing.Count > 0)
+                    text += UiLang.T(" • не найдено: ", " • missing: ") + string.Join(", ", missing);
+                return text;
+            }
+            catch (Exception e)
+            {
+                WinterWishlistMod.Log.Warning("GiveBestClothing: " + e);
+                return UiLang.T("Ошибка: ", "Error: ") + e.Message;
+            }
+        }
+
+        /// <summary>Ищет предмет по точному ID, иначе — по подстроке.</summary>
+        private static ItemEntry FindExact(string id)
+        {
+            foreach (var entry in ItemCatalog.Items)
+            {
+                if (string.Equals(entry.Id, id, StringComparison.OrdinalIgnoreCase))
+                    return entry;
+            }
+            return Find(id);
         }
 
         private static ItemEntry Find(string token)

@@ -524,6 +524,10 @@ namespace WinterWishlist
                     : UiLang.Failed + ": " + error2);
             GUILayout.EndHorizontal();
 
+            GUILayout.Space(6f);
+            if (GUILayout.Button(UiLang.T("Выдать лучшую одежду", "Give best clothing")))
+                SetStatus(ItemService.GiveBestClothing());
+
             GUILayout.EndScrollView();
         }
 
