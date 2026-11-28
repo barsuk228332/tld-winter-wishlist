@@ -31,7 +31,19 @@ namespace WinterWishlist
                         return null;
                     }
                     LastToFeet = true;
-                    return pm.InstantiateItemAtPlayersFeet(prefab, count);
+                    var dropped = pm.InstantiateItemAtPlayersFeet(prefab, count);
+                    if (dropped != null && condition < 0.999f)
+                    {
+                        try
+                        {
+                            dropped.SetNormalizedHP(condition, false);
+                        }
+                        catch (Exception e)
+                        {
+                            WinterWishlistMod.Log.Warning("Состояние предмета под ногами: " + e.Message);
+                        }
+                    }
+                    return dropped;
                 }
 
                 if (entry.Prefab != null)

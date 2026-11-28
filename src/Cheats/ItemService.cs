@@ -51,7 +51,11 @@ namespace WinterWishlist.Cheats
             new KitItem("GEAR_LongUnderwearWool", 2),
         };
 
-        /// <summary>Ремонтирует все ремонтируемые предметы в инвентаре.</summary>
+        /// <summary>
+        /// Восстанавливает состояние всех предметов в инвентаре, у которых оно ниже 100%.
+        /// Фильтр по компоненту Repairable здесь не подходит: у стрел, луков и оружия
+        /// его нет (нет крафтового ремонта), но прочность у них всё равно тратится.
+        /// </summary>
         internal static string RepairAll()
         {
             try
@@ -65,10 +69,14 @@ namespace WinterWishlist.Cheats
                 {
                     try
                     {
-                        var gear = wrapped.m_GearItem;
-                        if (gear == null || !gear.m_Repairable)
+                        if (wrapped == null)
                             continue;
-                        if (gear.GetNormalizedCondition() >= 0.999f)
+                        var gear = wrapped.m_GearItem;
+                        if (gear == null)
+                            continue;
+
+                        float condition = gear.GetNormalizedCondition();
+                        if (float.IsNaN(condition) || condition >= 0.999f)
                             continue;
 
                         gear.SetNormalizedHP(1f, false);
@@ -76,7 +84,7 @@ namespace WinterWishlist.Cheats
                     }
                     catch
                     {
-                        // отдельные предметы могут не поддерживать ремонт — пропускаем
+                        // отдельные предметы могут не поддерживать изменение состояния — пропускаем
                     }
                 }
 
@@ -183,14 +191,31 @@ namespace WinterWishlist.Cheats
             return Find(id);
         }
 
+        /// <summary>
+        /// Ищет предмет для набора: сначала точный ID (токен или GEAR_ + токен),
+        /// иначе среди совпадений по подстроке берёт предмет с самым коротким ID
+        /// (у базового предмета ID обычно короче, чем у его вариантов).
+        /// </summary>
         private static ItemEntry Find(string token)
         {
+            string prefixed = "GEAR_" + token;
+            ItemEntry best = null;
+
             foreach (var entry in ItemCatalog.Items)
             {
-                if (entry.Id != null && entry.Id.IndexOf(token, StringComparison.OrdinalIgnoreCase) >= 0)
+                if (entry.Id == null)
+                    continue;
+
+                if (string.Equals(entry.Id, token, StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(entry.Id, prefixed, StringComparison.OrdinalIgnoreCase))
                     return entry;
+
+                if (entry.Id.IndexOf(token, StringComparison.OrdinalIgnoreCase) >= 0 &&
+                    (best == null || entry.Id.Length < best.Id.Length))
+                    best = entry;
             }
-            return null;
+
+            return best;
         }
     }
 }

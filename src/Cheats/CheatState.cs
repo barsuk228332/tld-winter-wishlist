@@ -176,10 +176,15 @@ namespace WinterWishlist.Cheats
             {
                 try
                 {
-                    var encumber = GameManager.GetEncumberComponent();
-                    if (encumber != null)
-                        encumber.m_MaxCarryCapacity = _carryOriginal;
-                    _carryCaptured = false;
+                    // Восстанавливаем только если исходное значение реально сохраняли,
+                    // иначе в m_MaxCarryCapacity попадёт пустое значение по умолчанию.
+                    if (_carryCaptured)
+                    {
+                        var encumber = GameManager.GetEncumberComponent();
+                        if (encumber != null)
+                            encumber.m_MaxCarryCapacity = _carryOriginal;
+                        _carryCaptured = false;
+                    }
                 }
                 catch (Exception e)
                 {
